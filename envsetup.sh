@@ -1193,6 +1193,9 @@ function makerecipe() {
     echo "No branch name provided."
     return 1
   fi
+  cd .repo
+  mv local_manifest.xml local_manifest.xml.bak
+  cd ..
   cd android
   sed -i s/'default revision=.*'/'default revision="refs\/heads\/'$1'"'/ default.xml
   git commit -a -m "$1"
@@ -1207,6 +1210,10 @@ function makerecipe() {
     git push cmremote HEAD:refs/heads/'$1'
   fi
   '
+
+  cd .repo
+  mv local_manifest.xml.bak local_manifest.xml
+  cd ..
 }
 
 function cmgerrit() {
@@ -1504,6 +1511,16 @@ function reposync() {
             ;;
     esac
 }
+
+function repodiff() {
+    if [ -z "$*" ]; then
+        echo "Usage: repodiff <ref-from> [[ref-to] [--numstat]]"
+        return
+    fi
+    diffopts=$* repo forall -c \
+      'echo "$REPO_PATH ($REPO_REMOTE)"; git diff ${diffopts} 2>/dev/null ;'
+}
+
 # Force JAVA_HOME to point to java 1.6 if it isn't already set
 function set_java_home() {
     if [ ! "$JAVA_HOME" ]; then
