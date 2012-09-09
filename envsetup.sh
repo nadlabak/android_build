@@ -479,6 +479,7 @@ function brunch()
 {
     breakfast $*
     if [ $? -eq 0 ]; then
+        export CM_FAST_BUILD=1
         mka bacon
     else
         echo "No such item in brunch menu. Try 'breakfast'"
@@ -661,10 +662,16 @@ function eat()
             done
             echo "Device Found.."
         fi
+        # if adbd isn't root we can't write to /cache/recovery/
+        adb root
+        sleep 1
+        adb wait-for-device
         echo "Pushing $ZIPFILE to device"
         if adb push $ZIPPATH /storage/sdcard0/ ; then
+            # Optional path for sdcard0 in recovery
+            [ -z "$1" ] && DIR=sdcard || DIR=$1
             cat << EOF > /tmp/command
---update_package=/sdcard/$ZIPFILE
+--update_package=/$DIR/$ZIPFILE
 EOF
             if adb push /tmp/command /cache/recovery/ ; then
                 echo "Rebooting into recovery for installation"
