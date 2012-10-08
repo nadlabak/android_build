@@ -850,7 +850,11 @@ SYSTEMIMAGE_SOURCE_DIR := $(TARGET_OUT)
 ifneq ($(INSTALLED_RECOVERYIMAGE_TARGET),)
 intermediates := $(call intermediates-dir-for,PACKAGING,recovery_patch)
 ifndef BOARD_CUSTOM_BOOTIMG_MK
+ifeq ($(CM_BUILD),)
 RECOVERY_FROM_BOOT_PATCH := $(intermediates)/recovery_from_boot.p
+else
+RECOVERY_FROM_BOOT_PATCH :=
+endif
 else
 RECOVERY_FROM_BOOT_PATCH :=
 endif
@@ -1305,10 +1309,10 @@ otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
 ifneq ($(TARGET_CUSTOM_RELEASETOOL),)
 	@echo "Running custom releasetool..."
-	$(hide) OTAPACKAGE=$(PWD)/$(INTERNAL_OTA_PACKAGE_TARGET) $(TARGET_CUSTOM_RELEASETOOL)
+	$(hide) OTAPACKAGE=$(INTERNAL_OTA_PACKAGE_TARGET) APKCERTS=$(APKCERTS_FILE) $(TARGET_CUSTOM_RELEASETOOL)
 else
 	@echo "Running releasetool..."
-	$(hide) OTAPACKAGE=$(PWD)/$(INTERNAL_OTA_PACKAGE_TARGET) ./vendor/cm/tools/squisher
+	$(hide) OTAPACKAGE=$(INTERNAL_OTA_PACKAGE_TARGET) APKCERTS=$(APKCERTS_FILE) ./vendor/cm/tools/squisher
 endif
 
 # -----------------------------------------------------------------
