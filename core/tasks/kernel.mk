@@ -1,7 +1,5 @@
 #Android makefile to build kernel as a part of Android Build
 
-ifneq ($(TARGET_NO_KERNEL),true)
-
 TARGET_AUTO_KDIR := $(shell echo $(TARGET_DEVICE_DIR) | sed -e 's/^device/kernel/g')
 
 ## Externally influenced variables
@@ -163,5 +161,5 @@ $(file) : $(KERNEL_BIN) | $(ACP)
 
 ALL_PREBUILT += $(INSTALLED_KERNEL_TARGET)
 
-endif # TARGET_NO_KERNEL
+endif
 
