@@ -93,7 +93,7 @@ define mv-modules
     mdpath=`find $(KERNEL_MODULES_OUT) -type f -name modules.order`;\
     if [ "$$mdpath" != "" ];then\
         mpath=`dirname $$mdpath`;\
-        ko=`find $$mpath/kernel -type f -name *.ko`;\
+        ko=`find $$mpath/kernel -type f -name '*.ko'`;\
         for i in $$ko; do mv $$i $(KERNEL_MODULES_OUT)/; done;\
     fi
 endef
