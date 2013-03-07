@@ -139,6 +139,7 @@ $(word 3, 3, $(call default-locale, $(1)))
 endef
 
 BUILDINFO_SH := build/tools/buildinfo.sh
+.PHONY: $(INSTALLED_BUILD_PROP_TARGET)
 $(INSTALLED_BUILD_PROP_TARGET): $(BUILDINFO_SH) $(INTERNAL_BUILD_ID_MAKEFILE)
 	@echo Target buildinfo: $@
 	@mkdir -p $(dir $@)
